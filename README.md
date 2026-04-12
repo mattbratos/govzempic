@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GovZempic
+
+Trim the federal fat. Watch your check go up.
+
+## What is this?
+
+The government wastes a trillion dollars a year and nobody feels the savings because they vanish into an abstraction called "the federal budget." GovZempic makes it tangible: browse every federal program, vote on what gets cut, and see exactly how much that would add to a monthly UBI check for every American. Cutting stops feeling like taking when you can see your dividend go up in real time.
+
+The thesis: DOGE failed because it solved a math problem without solving a PR problem. Bribe people with their own money and suddenly everyone's a fiscal hawk.
+
+## Features
+
+- **Kill List** — every federal program ranked by cost, browsable and sortable
+- **Vote to Cut** — mark programs for elimination and watch the UBI meter tick up
+- **The Dividend** — live calculation: if 50% of cuts went directly to Americans, here's the monthly check
+- **Share your cuts** — export your personal kill list and dare others to defend the programs you axed
+- **Leaderboard** — most-voted cuts nationwide, updated in real time
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **UI**: shadcn/ui + Tailwind CSS
+- **Language**: TypeScript
+- **Runtime**: Bun
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone https://github.com/mattbratos/govzempic
+cd govzempic
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Roadmap
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [ ] Seed the kill list with real federal program data (USASpending.gov API)
+- [ ] Build the UBI dividend calculator with live vote aggregation
+- [ ] Add shareable cut portfolios
+- [ ] Real-time leaderboard of most-voted cuts
+- [ ] Embed the original essay as the About page
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
