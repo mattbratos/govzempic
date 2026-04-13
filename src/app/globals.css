@@ -120,29 +120,29 @@
 
 /* ── TERMINAL GLOW (dark mode interactive elements) ──────────── */
 .dark .terminal-glow:hover {
-  box-shadow: 0 0 8px oklch(0.93 0 0 / 0.15);
+  box-shadow: 0 0 8px oklch(0.88 0.27 145 / 0.15);
 }
 
 .dark .terminal-glow-active {
-  box-shadow: 0 0 12px oklch(0.93 0 0 / 0.2);
+  box-shadow: 0 0 12px oklch(0.88 0.27 145 / 0.2);
 }
 
 /* ── MONTHLY DIVIDEND GLOW ────────────────────────────────────── */
 .dark .glow-green-sm {
   text-shadow:
-    0 0 8px oklch(0.93 0 0 / 0.5),
-    0 0 20px oklch(0.93 0 0 / 0.2);
+    0 0 8px oklch(0.88 0.27 145 / 0.5),
+    0 0 20px oklch(0.88 0.27 145 / 0.2);
 }
 
 .dark .glow-green-md {
   text-shadow:
-    0 0 10px oklch(0.93 0 0 / 0.6),
-    0 0 30px oklch(0.93 0 0 / 0.3);
+    0 0 10px oklch(0.88 0.27 145 / 0.6),
+    0 0 30px oklch(0.88 0.27 145 / 0.3);
 }
 
 .dark .glow-green-lg {
   text-shadow:
-    0 0 12px oklch(0.93 0 0 / 0.8),
-    0 0 40px oklch(0.93 0 0 / 0.4),
-    0 0 80px oklch(0.93 0 0 / 0.15);
+    0 0 12px oklch(0.88 0.27 145 / 0.8),
+    0 0 40px oklch(0.88 0.27 145 / 0.4),
+    0 0 80px oklch(0.88 0.27 145 / 0.15);
 }
