@@ -75,7 +75,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
       {/* Table */}
       <div className="border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-lg">
             <thead className="bg-muted/30 border-b border-border">
               <tr>
                 <th className="text-left px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap"
