@@ -82,6 +82,7 @@
       "description": "Interest payments owed on $36T+ of accumulated national debt. Not a program — it's a bill that comes due no matter what.",
       "cuttable": true,
       "no_kill": true,
+      "no_slim": true,
       "cut_note": "Defaulting on debt payments would crash global financial markets and make borrowing nearly impossible."
     },
     {

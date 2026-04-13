@@ -17,6 +17,7 @@ export interface BudgetItem {
   description: string;
   cuttable: boolean;
   no_kill?: boolean;
+  no_slim?: boolean;
   cut_note: string | null;
 }
 

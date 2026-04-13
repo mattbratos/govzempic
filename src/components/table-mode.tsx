@@ -75,7 +75,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
       {/* Table */}
       <div className="border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead className="bg-muted/30 border-b border-border">
               <tr>
                 <th className="text-left px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap"
@@ -103,6 +103,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                 const isSlimmed = cut === "slim";
                 const isChild = item.parent !== null;
                 const killDisabled = !!item.no_kill;
+                const slimDisabled = !!item.no_slim;
 
                 return (
                   <motion.tr
@@ -117,7 +118,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     } ${isChild ? "opacity-60" : ""}`}
                   >
                     {/* Name */}
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         {isChild && (
                           <span className="text-muted-foreground/30 shrink-0">└─</span>
@@ -138,7 +139,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     </td>
 
                     {/* Budget */}
-                    <td className="px-3 py-3 text-right font-mono font-bold tabular-nums whitespace-nowrap">
+                    <td className="px-3 py-4 text-right font-mono font-bold tabular-nums whitespace-nowrap">
                       {isSlimmed ? (
                         <>
                           <span className="text-orange-400 line-through mr-1 opacity-50">
@@ -162,7 +163,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     </td>
 
                     {/* Action */}
-                    <td className="px-3 py-3">
+                    <td className="px-3 py-4">
                       <div className="flex gap-1 justify-center">
                         <button
                           onClick={() => !killDisabled && handleCutClick(item.id, "kill")}
@@ -180,13 +181,17 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                           {isKilled ? "KILLED ✕" : "KILL IT"}
                         </button>
                         <button
-                          onClick={() => handleCutClick(item.id, "slim")}
-                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
-                            isSlimmed
-                              ? "border-orange-500 bg-orange-500/15 text-orange-400"
-                              : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5"
+                          onClick={() => !slimDisabled && handleCutClick(item.id, "slim")}
+                          disabled={slimDisabled}
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${
+                            slimDisabled
+                              ? "border-border text-muted-foreground/25 cursor-not-allowed"
+                              : isSlimmed
+                              ? "border-orange-500 bg-orange-500/15 text-orange-400 terminal-glow"
+                              : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5 terminal-glow"
                           }`}
                           style={{ fontFamily: "var(--font-orbitron)" }}
+                          title={slimDisabled ? item.cut_note ?? undefined : undefined}
                         >
                           {isSlimmed ? "SLIMMED ~" : "SLIM IT"}
                         </button>
