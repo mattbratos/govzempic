@@ -14,6 +14,7 @@ export type CutType = "kill" | "slim";
 interface CutsContextType {
   cuts: Map<string, CutType>;
   setCut: (id: string, type: CutType) => void;
+  setCutBulk: (ids: string[], type: CutType) => void;
   removeCut: (id: string) => void;
   getCut: (id: string) => CutType | null;
   killCount: number;
@@ -37,6 +38,14 @@ export function CutsProvider({
 
   const setCut = useCallback((id: string, type: CutType) => {
     setCuts((prev) => new Map(prev).set(id, type));
+  }, []);
+
+  const setCutBulk = useCallback((ids: string[], type: CutType) => {
+    setCuts((prev) => {
+      const next = new Map(prev);
+      ids.forEach((id) => next.set(id, type));
+      return next;
+    });
   }, []);
 
   const removeCut = useCallback((id: string) => {
@@ -85,6 +94,7 @@ export function CutsProvider({
       value={{
         cuts,
         setCut,
+        setCutBulk,
         removeCut,
         getCut,
         killCount,

@@ -26,7 +26,7 @@ const TYPE_TAG_COLOR: Record<ItemType, string> = {
 };
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
-  const { getCut, setCut, removeCut, cuts } = useCuts();
+  const { getCut, setCut, setCutBulk, removeCut, cuts } = useCuts();
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [filter, setFilter] = useState<Filter>("all");
@@ -84,13 +84,29 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
             </button>
           ))}
         </div>
-        <button
-          onClick={() => setShowChildren((v) => !v)}
-          className="ml-auto px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
-          style={{ fontFamily: "var(--font-orbitron)" }}
-        >
-          {showChildren ? "– SUB" : "+ SUB"}
-        </button>
+        <div className="ml-auto flex gap-1.5">
+          <button
+            onClick={() => setCutBulk(filtered.map((i) => i.id), "kill")}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-destructive/40 text-destructive/70 hover:border-destructive hover:text-destructive hover:bg-destructive/10 transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            KILL ALL
+          </button>
+          <button
+            onClick={() => setCutBulk(filtered.map((i) => i.id), "slim")}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-orange-500/40 text-orange-500/70 hover:border-orange-500 hover:text-orange-400 hover:bg-orange-500/5 transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            SLIM ALL
+          </button>
+          <button
+            onClick={() => setShowChildren((v) => !v)}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            {showChildren ? "– SUB" : "+ SUB"}
+          </button>
+        </div>
       </div>
 
       {/* Status line */}
