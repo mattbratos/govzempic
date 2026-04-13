@@ -65,8 +65,8 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
           ))}
         </select>
 
-        {/* Bulk actions */}
-        <div className="flex gap-1.5">
+        {/* Bulk actions — right side */}
+        <div className="ml-auto flex gap-1.5">
         <button
           onClick={() => setCutBulk(filtered.map((i) => i.id), "kill")}
           className="px-3 py-1 text-xs font-bold tracking-widest border border-destructive/40 text-destructive/70 hover:border-destructive hover:text-destructive hover:bg-destructive/10 transition-all terminal-glow"
