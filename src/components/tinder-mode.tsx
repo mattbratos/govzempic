@@ -11,7 +11,6 @@ export function TinderMode({ items }: { items: BudgetItem[] }) {
   const cuttable = items.filter((i) => i.cuttable);
   const [index, setIndex] = useState(0);
 
-  // Keyboard controls
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (index >= cuttable.length) return;
@@ -33,15 +32,16 @@ export function TinderMode({ items }: { items: BudgetItem[] }) {
     setIndex((i) => i + 1);
   };
 
-  const remaining = cuttable.slice(index);
-  // Reverse so the first item renders on top (highest DOM order = top of stack)
-  const visible = remaining.slice(0, 3);
-
+  const visible = cuttable.slice(index, index + 3);
   const done = index >= cuttable.length;
+  const pct = Math.round((index / cuttable.length) * 100);
 
   return (
-    <div className="flex flex-col items-center px-4 pt-8 pb-16">
-      {/* Hero text — only show before first swipe */}
+    <div
+      className="flex flex-col items-center px-4 pt-8 pb-16"
+      style={{ fontFamily: "var(--font-space-mono)" }}
+    >
+      {/* Hero — only before first swipe */}
       <AnimatePresence>
         {index === 0 && (
           <motion.div
@@ -50,15 +50,18 @@ export function TinderMode({ items }: { items: BudgetItem[] }) {
             exit={{ opacity: 0, y: -10 }}
             className="text-center mb-8 max-w-md"
           >
-            <h1 className="text-3xl font-black mb-2 leading-tight">
-              Trim the federal fat.
+            <h1
+              className="text-2xl font-black mb-3 tracking-wide uppercase leading-snug"
+              style={{ fontFamily: "var(--font-orbitron)" }}
+            >
+              TRIM THE FEDERAL FAT.
               <br />
-              <span className="text-emerald-400">Watch your check go up.</span>
+              <span className="text-primary">WATCH YOUR CHECK GO UP.</span>
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Swipe right to axe a program. Swipe left to spare it.
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              // SWIPE RIGHT TO AXE &nbsp;·&nbsp; SWIPE LEFT TO SPARE
               <br />
-              Every cut puts money directly in your pocket.
+              // EVERY CUT PUTS MONEY IN YOUR POCKET
             </p>
           </motion.div>
         )}
@@ -66,26 +69,34 @@ export function TinderMode({ items }: { items: BudgetItem[] }) {
 
       {done ? (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center justify-center text-center mt-16 max-w-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center text-center mt-16 max-w-sm border border-border p-8"
         >
-          <div className="text-6xl mb-6">🪓</div>
-          <h2 className="text-3xl font-black mb-3">You&apos;ve reviewed everything.</h2>
-          <p className="text-muted-foreground mb-8">
-            Switch to Table mode to review your cuts, add more, or change your mind.
+          <p className="text-xs text-muted-foreground tracking-widest mb-4">
+            &gt; PROCESS_COMPLETE
+          </p>
+          <h2
+            className="text-xl font-black mb-3 tracking-wide uppercase"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            KILL LIST COMPILED.
+          </h2>
+          <p className="text-xs text-muted-foreground mb-8 leading-relaxed">
+            // SWITCH TO TABLE MODE TO REVIEW YOUR CUTS, ADD MORE, OR RESTORE
           </p>
           <button
             onClick={() => setMode("table")}
-            className="px-6 py-3 bg-foreground text-background rounded-xl font-bold hover:opacity-90 transition-opacity"
+            className="px-6 py-3 bg-primary text-primary-foreground text-xs font-bold tracking-widest uppercase border border-primary hover:opacity-90 transition-opacity terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
           >
-            Review my cuts →
+            &gt; REVIEW CUTS
           </button>
         </motion.div>
       ) : (
         <>
           {/* Card stack */}
-          <div className="relative w-full max-w-sm h-[480px]">
+          <div className="relative w-full max-w-sm h-[500px]">
             {[...visible].reverse().map((item, reverseIdx) => {
               const stackIndex = visible.length - 1 - reverseIdx;
               return (
@@ -100,41 +111,44 @@ export function TinderMode({ items }: { items: BudgetItem[] }) {
             })}
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-10 mt-10">
+          {/* Controls */}
+          <div className="flex items-center gap-8 mt-10">
             <button
               onClick={handleKeep}
-              className="w-14 h-14 rounded-full border-2 border-border flex items-center justify-center text-muted-foreground hover:border-emerald-500 hover:text-emerald-500 transition-all text-xl font-bold"
+              className="px-5 py-2 border border-border text-muted-foreground hover:border-primary hover:text-primary transition-all text-xs font-bold tracking-widest terminal-glow"
+              style={{ fontFamily: "var(--font-orbitron)" }}
               title="Keep (←)"
             >
-              ✕
+              [ KEEP ]
             </button>
 
-            <div className="text-center">
+            {/* Progress */}
+            <div className="text-center min-w-[80px]">
               <p className="text-xs text-muted-foreground tabular-nums">
-                {index + 1} / {cuttable.length}
+                {String(index + 1).padStart(2, "0")}/{String(cuttable.length).padStart(2, "0")}
               </p>
-              <div className="w-24 h-1 bg-muted rounded-full mt-1 overflow-hidden">
+              <div className="w-20 h-px bg-border mt-2 overflow-hidden">
                 <motion.div
-                  className="h-full bg-emerald-500 rounded-full"
-                  animate={{ width: `${((index) / cuttable.length) * 100}%` }}
+                  className="h-full bg-primary"
+                  animate={{ width: `${pct}%` }}
                   transition={{ type: "spring", stiffness: 100 }}
                 />
               </div>
+              <p className="text-xs text-muted-foreground mt-1">{pct}%</p>
             </div>
 
             <button
               onClick={handleAxe}
-              className="w-14 h-14 rounded-full border-2 border-red-500/40 bg-red-500/5 flex items-center justify-center text-red-400 hover:border-red-500 hover:bg-red-500/15 transition-all text-xl"
+              className="px-5 py-2 border border-destructive/60 text-destructive hover:border-destructive hover:bg-destructive/10 transition-all text-xs font-bold tracking-widest terminal-glow"
+              style={{ fontFamily: "var(--font-orbitron)" }}
               title="Axe it (→)"
             >
-              🪓
+              [ AXE ]
             </button>
           </div>
 
-          {/* Keyboard hint */}
-          <p className="text-xs text-muted-foreground/50 mt-4">
-            ← / → arrow keys also work
+          <p className="text-xs text-muted-foreground/40 mt-5 tracking-widest">
+            // ARROW KEYS ALSO WORK
           </p>
         </>
       )}
