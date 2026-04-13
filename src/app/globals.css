@@ -6,7 +6,7 @@
 
 /* ── THEME TOKENS ─────────────────────────────────────────────── */
 @theme inline {
-  --font-sans: var(--font-orbitron);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-space-mono);
   --font-heading: var(--font-orbitron);
 
@@ -96,7 +96,8 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-space-mono), monospace;
+    font-family: var(--font-geist-sans), sans-serif;
+    font-size: 15px;
   }
 
   h1, h2, h3, h4, h5, h6 {
