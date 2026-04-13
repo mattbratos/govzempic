@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   description: "Trim the federal fat. Watch your check go up.",
 };
 
+// Runs before hydration — sets dark/light class from localStorage (default: dark)
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');document.documentElement.classList.toggle('dark',t?t==='dark':true)}catch(e){document.documentElement.classList.add('dark')}})()`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,13 +34,12 @@ export default function RootLayout({
       className={`${orbitron.variable} ${spaceMono.variable} h-full`}
       suppressHydrationWarning
     >
+      <head>
+        {/* eslint-disable-next-line @next/next/no-before-interactive-script-component */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           {children}
         </ThemeProvider>
       </body>
