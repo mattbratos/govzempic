@@ -27,7 +27,8 @@ export function UBIPanel() {
     killCount,
     slimCount,
   } = useCuts();
-  const { currency } = useCountry();
+  const { currency, currentBudget } = useCountry();
+  const { total_outlays_billions, population } = currentBudget.meta;
 
   const hasAnyCuts = totalCutBillions > 0;
   const fmt = (usd: number) => formatCurrency(usd, currency);
@@ -139,13 +140,34 @@ export function UBIPanel() {
         {/* Divider */}
         <div className="border-t border-border" />
 
+        {/* Country stats */}
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-baseline">
+            <span className="text-xs text-muted-foreground tracking-widest">TOTAL_BUDGET</span>
+            <span className="text-sm font-bold tabular-nums text-foreground">
+              ${total_outlays_billions >= 1000
+                ? (total_outlays_billions / 1000).toFixed(1) + "T"
+                : total_outlays_billions + "B"}
+            </span>
+          </div>
+          <div className="flex justify-between items-baseline">
+            <span className="text-xs text-muted-foreground tracking-widest">POPULATION</span>
+            <span className="text-sm font-bold tabular-nums text-foreground">
+              {(population / 1_000_000).toFixed(1)}M
+            </span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-border" />
+
         {/* Context note */}
         <div className="text-xs text-muted-foreground/50 leading-relaxed">
           // 50% OF SAVINGS
           <br />
           // SPLIT BETWEEN
           <br />
-          // 335M AMERICANS
+          // {(population / 1_000_000).toFixed(0)}M PEOPLE
         </div>
       </div>
 
