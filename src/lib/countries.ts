@@ -2,6 +2,7 @@ export interface CountryConfig {
   id: string;
   name: string;
   flag: string;
+  avgGrowthRate: number; // 10-year average real GDP growth %
 }
 
 export interface CurrencyConfig {
@@ -12,9 +13,9 @@ export interface CurrencyConfig {
 }
 
 export const COUNTRIES: CountryConfig[] = [
-  { id: "us", name: "United States", flag: "🇺🇸" },
-  { id: "pl", name: "Poland",        flag: "🇵🇱" },
-  { id: "jp", name: "Japan",         flag: "🇯🇵" },
+  { id: "us", name: "United States", flag: "🇺🇸", avgGrowthRate: 2.5 }, // ~2.5% avg real GDP growth 2014-2024
+  { id: "pl", name: "Poland",        flag: "🇵🇱", avgGrowthRate: 3.5 }, // ~3.5% avg real GDP growth 2014-2024
+  { id: "jp", name: "Japan",         flag: "🇯🇵", avgGrowthRate: 0.8 }, // ~0.8% avg real GDP growth 2014-2024
 ];
 
 export const CURRENCIES: CurrencyConfig[] = [

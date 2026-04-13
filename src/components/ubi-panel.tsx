@@ -23,10 +23,10 @@ const YEAR_OPTIONS = [5, 10, 15, 20];
 
 export function UBIPanel() {
   const { ubiPerMonth, ubiPerYear, ubiPerWeek, totalCutBillions, killCount, slimCount } = useCuts();
-  const { currency, currentBudget } = useCountry();
+  const { currency, currentBudget, country } = useCountry();
   const { total_outlays_billions, population } = currentBudget.meta;
 
-  const [growthRate, setGrowthRate] = useState(3.0);
+  const [growthRate, setGrowthRate] = useState(country.avgGrowthRate);
   const [projectionYears, setProjectionYears] = useState(10);
 
   const hasAnyCuts = totalCutBillions > 0;
@@ -90,21 +90,26 @@ export function UBIPanel() {
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-baseline">
               <span className="text-xs text-muted-foreground tracking-widest">GDP_GROWTH</span>
-              <span className="text-sm font-bold tabular-nums text-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
-                {growthRate.toFixed(1)}%
-              </span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-xs text-muted-foreground/40 tracking-widest">
+                  avg {country.avgGrowthRate}%
+                </span>
+                <span className="text-sm font-bold tabular-nums text-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
+                  {growthRate.toFixed(1)}%
+                </span>
+              </div>
             </div>
             <input
               type="range"
               min={0}
-              max={10}
+              max={100}
               step={0.5}
               value={growthRate}
               onChange={(e) => setGrowthRate(parseFloat(e.target.value))}
               className="w-full accent-[oklch(0.88_0.27_145)] h-1 cursor-pointer"
             />
             <div className="flex justify-between text-xs text-muted-foreground/40">
-              <span>0%</span><span>5%</span><span>10%</span>
+              <span>0%</span><span>50%</span><span>100%</span>
             </div>
           </div>
 
