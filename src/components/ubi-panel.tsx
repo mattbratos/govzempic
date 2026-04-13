@@ -7,9 +7,9 @@ function AnimatedNumber({ value, decimals = 2 }: { value: number; decimals?: num
   return (
     <motion.span
       key={value.toFixed(decimals)}
-      initial={{ opacity: 0.4, y: -6 }}
+      initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
     >
       {value.toFixed(decimals)}
     </motion.span>
@@ -30,7 +30,7 @@ export function UBIPanel() {
 
   return (
     <div
-      className="flex flex-col h-full border-border"
+      className="flex flex-col h-full"
       style={{ fontFamily: "var(--font-space-mono)" }}
     >
       {/* Panel header */}
@@ -43,52 +43,69 @@ export function UBIPanel() {
         </p>
       </div>
 
-      <div className="flex-1 flex flex-col px-5 py-6 gap-6">
-        {/* Main UBI number */}
+      <div className="flex-1 flex flex-col px-5 py-6 gap-5">
+
+        {/* ── PER MONTH — hero number ────────────────────── */}
         <div>
-          <p className="text-xs text-muted-foreground tracking-widest mb-3">
+          <p className="text-xs text-muted-foreground tracking-widest mb-2">
             PER_MONTH
           </p>
           <div
-            className={`text-5xl font-black tabular-nums leading-none transition-colors duration-300 ${
-              hasAnyCuts ? "text-primary terminal-glow-active" : "text-muted-foreground/30"
+            className={`font-black tabular-nums leading-none transition-all duration-300 ${
+              hasAnyCuts
+                ? "text-primary glow-green-lg text-6xl"
+                : "text-muted-foreground/20 text-6xl"
             }`}
             style={{ fontFamily: "var(--font-orbitron)" }}
           >
             $<AnimatedNumber value={ubiPerMonth} decimals={2} />
           </div>
-          <AnimatePresence>
-            {hasAnyCuts && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-1"
-              >
-                <div className="w-full h-px bg-primary/20 mt-4 mb-4" />
-                <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-muted-foreground tracking-widest">PER_YEAR</span>
-                    <span className="text-lg font-bold text-foreground tabular-nums">
-                      $<AnimatedNumber value={ubiPerYear} decimals={0} />
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-xs text-muted-foreground tracking-widest">PER_WEEK</span>
-                    <span className="text-base font-bold text-foreground tabular-nums">
-                      $<AnimatedNumber value={ubiPerWeek} decimals={2} />
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
-        {/* Divider */}
+        {/* ── PER YEAR ───────────────────────────────────── */}
+        <AnimatePresence>
+          {hasAnyCuts && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.22 }}
+            >
+              <div className="border-t border-primary/20 pt-5 flex flex-col gap-4">
+
+                <div>
+                  <p className="text-xs text-muted-foreground tracking-widest mb-1">
+                    PER_YEAR
+                  </p>
+                  <div
+                    className="text-3xl font-black tabular-nums text-primary glow-green-md leading-none"
+                    style={{ fontFamily: "var(--font-orbitron)" }}
+                  >
+                    $<AnimatedNumber value={ubiPerYear} decimals={0} />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted-foreground tracking-widest mb-1">
+                    PER_WEEK
+                  </p>
+                  <div
+                    className="text-2xl font-black tabular-nums text-primary glow-green-sm leading-none"
+                    style={{ fontFamily: "var(--font-orbitron)" }}
+                  >
+                    $<AnimatedNumber value={ubiPerWeek} decimals={2} />
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Divider ────────────────────────────────────── */}
         <div className="border-t border-border" />
 
-        {/* Stats */}
+        {/* ── Kill list stats ────────────────────────────── */}
         <div className="flex flex-col gap-3">
           <p
             className="text-xs text-muted-foreground tracking-widest"
@@ -101,8 +118,8 @@ export function UBIPanel() {
             <div className="flex justify-between items-center">
               <span className="text-xs text-destructive tracking-widest">KILLED</span>
               <span
-                className={`text-xl font-black tabular-nums ${
-                  killCount > 0 ? "text-destructive" : "text-muted-foreground/30"
+                className={`text-2xl font-black tabular-nums ${
+                  killCount > 0 ? "text-destructive" : "text-muted-foreground/25"
                 }`}
                 style={{ fontFamily: "var(--font-orbitron)" }}
               >
@@ -112,8 +129,8 @@ export function UBIPanel() {
             <div className="flex justify-between items-center">
               <span className="text-xs text-orange-400 tracking-widest">SLIMMED</span>
               <span
-                className={`text-xl font-black tabular-nums ${
-                  slimCount > 0 ? "text-orange-400" : "text-muted-foreground/30"
+                className={`text-2xl font-black tabular-nums ${
+                  slimCount > 0 ? "text-orange-400" : "text-muted-foreground/25"
                 }`}
                 style={{ fontFamily: "var(--font-orbitron)" }}
               >
@@ -132,22 +149,22 @@ export function UBIPanel() {
           </div>
         </div>
 
-        {/* Divider */}
+        {/* ── Divider ────────────────────────────────────── */}
         <div className="border-t border-border" />
 
-        {/* Context note */}
-        <div className="text-xs text-muted-foreground/50 leading-relaxed">
+        {/* ── Footer note ────────────────────────────────── */}
+        <div className="text-xs text-muted-foreground/40 leading-relaxed">
           // 50% OF SAVINGS
           <br />
           // SPLIT BETWEEN
           <br />
           // 335M AMERICANS
         </div>
+
       </div>
 
-      {/* Footer */}
       <div className="border-t border-border px-5 py-3">
-        <p className="text-xs text-muted-foreground/40 tracking-widest">
+        <p className="text-xs text-muted-foreground/30 tracking-widest">
           FY2026 · CBO DATA
         </p>
       </div>
@@ -157,7 +174,7 @@ export function UBIPanel() {
 
 /* ── Compact bar for mobile ─────────────────────────── */
 export function UBIBar() {
-  const { ubiPerMonth, totalCutBillions, killCount, slimCount } = useCuts();
+  const { ubiPerMonth, ubiPerYear, totalCutBillions, killCount, slimCount } = useCuts();
   const hasAnyCuts = totalCutBillions > 0;
 
   return (
@@ -166,32 +183,37 @@ export function UBIBar() {
       style={{ fontFamily: "var(--font-space-mono)" }}
     >
       <div>
-        <p className="text-xs text-muted-foreground tracking-widest">DIVIDEND/MO</p>
+        <p className="text-xs text-muted-foreground tracking-widest mb-1">DIVIDEND/MO</p>
         <p
-          className={`text-2xl font-black tabular-nums leading-tight ${
-            hasAnyCuts ? "text-primary" : "text-muted-foreground/30"
+          className={`text-3xl font-black tabular-nums leading-none ${
+            hasAnyCuts ? "text-primary glow-green-md" : "text-muted-foreground/25"
           }`}
           style={{ fontFamily: "var(--font-orbitron)" }}
         >
           ${ubiPerMonth.toFixed(2)}
         </p>
+        {hasAnyCuts && (
+          <p className="text-xs text-primary/70 mt-0.5 glow-green-sm">
+            ${ubiPerYear.toFixed(0)}/yr
+          </p>
+        )}
       </div>
       <div className="flex gap-4 text-xs">
         <div className="text-center">
           <p className="text-destructive tracking-widest">KILLED</p>
-          <p className="text-lg font-black text-destructive" style={{ fontFamily: "var(--font-orbitron)" }}>
+          <p className="text-xl font-black text-destructive" style={{ fontFamily: "var(--font-orbitron)" }}>
             {String(killCount).padStart(2, "0")}
           </p>
         </div>
         <div className="text-center">
           <p className="text-orange-400 tracking-widest">SLIMMED</p>
-          <p className="text-lg font-black text-orange-400" style={{ fontFamily: "var(--font-orbitron)" }}>
+          <p className="text-xl font-black text-orange-400" style={{ fontFamily: "var(--font-orbitron)" }}>
             {String(slimCount).padStart(2, "0")}
           </p>
         </div>
         <div className="text-center">
           <p className="text-muted-foreground tracking-widest">SAVED</p>
-          <p className="text-lg font-black text-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
+          <p className="text-xl font-black text-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
             ${totalCutBillions.toFixed(0)}B
           </p>
         </div>
