@@ -51,7 +51,7 @@ export function UBIPanel() {
           </p>
           <div
             className={`text-5xl font-black tabular-nums leading-none transition-colors duration-300 ${
-              hasAnyCuts ? "text-primary glow-green-lg" : "text-muted-foreground/30"
+              hasAnyCuts ? "text-green-400" : "text-muted-foreground/30"
             }`}
             style={{ fontFamily: "var(--font-orbitron)" }}
           >
