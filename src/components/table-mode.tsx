@@ -26,7 +26,7 @@ const TYPE_TAG_COLOR: Record<ItemType, string> = {
 };
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
-  const { getCut, setCut, setCutBulk, removeCut, cuts } = useCuts();
+  const { getCut, setCut, setCutBulk, removeCut, resetCuts, cuts } = useCuts();
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [filter, setFilter] = useState<Filter>("all");
@@ -106,6 +106,15 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
           >
             {showChildren ? "– SUB" : "+ SUB"}
           </button>
+          {cuts.size > 0 && (
+            <button
+              onClick={resetCuts}
+              className="px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
+              style={{ fontFamily: "var(--font-orbitron)" }}
+            >
+              RESET
+            </button>
+          )}
         </div>
       </div>
 

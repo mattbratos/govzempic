@@ -16,6 +16,7 @@ interface CutsContextType {
   setCut: (id: string, type: CutType) => void;
   setCutBulk: (ids: string[], type: CutType) => void;
   removeCut: (id: string) => void;
+  resetCuts: () => void;
   getCut: (id: string) => CutType | null;
   killCount: number;
   slimCount: number;
@@ -39,6 +40,8 @@ export function CutsProvider({
   const setCut = useCallback((id: string, type: CutType) => {
     setCuts((prev) => new Map(prev).set(id, type));
   }, []);
+
+  const resetCuts = useCallback(() => setCuts(new Map()), []);
 
   const setCutBulk = useCallback((ids: string[], type: CutType) => {
     setCuts((prev) => {
@@ -96,6 +99,7 @@ export function CutsProvider({
         setCut,
         setCutBulk,
         removeCut,
+        resetCuts,
         getCut,
         killCount,
         slimCount,
