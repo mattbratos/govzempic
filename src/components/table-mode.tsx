@@ -90,6 +90,10 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     ANNUAL{sortIcon("budget_billions")}
                   </button>
                 </th>
+                <th className="text-right px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-orbitron)" }}>
+                  UBI/MO
+                </th>
                 <th className="px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase text-center whitespace-nowrap"
                   style={{ fontFamily: "var(--font-orbitron)" }}>
                   ACTION
@@ -160,6 +164,13 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                             : item.budget_billions.toFixed(1)}B
                         </span>
                       )}
+                    </td>
+
+                    {/* UBI/mo */}
+                    <td className="px-3 py-4 text-right tabular-nums whitespace-nowrap text-muted-foreground">
+                      +${isSlimmed
+                        ? (item.ubi_per_month * 0.5).toFixed(2)
+                        : item.ubi_per_month.toFixed(2)}
                     </td>
 
                     {/* Action */}
