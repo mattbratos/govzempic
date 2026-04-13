@@ -11,7 +11,7 @@ export function Header() {
           className="shrink-0 text-base font-black tracking-widest uppercase"
           style={{ fontFamily: "var(--font-orbitron)" }}
         >
-          <span className="text-muted-foreground">&gt; </span>
+          <span className="text-destructive">☠ </span>
           GOV<span className="text-destructive">ZEMPIC</span>
           <span className="cursor text-muted-foreground" />
         </a>
