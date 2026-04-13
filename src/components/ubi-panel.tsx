@@ -90,6 +90,7 @@ export function UBIPanel() {
               step={1}
               value={familySize}
               onChange={(e) => setFamilySize(parseInt(e.target.value))}
+              aria-label="Household size"
               className="w-full accent-[oklch(0.88_0.27_145)] h-1 cursor-pointer"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -161,6 +162,7 @@ export function UBIPanel() {
               step={0.5}
               value={growthRate}
               onChange={(e) => setGrowthRate(parseFloat(e.target.value))}
+              aria-label="GDP growth rate"
               className="w-full accent-[oklch(0.88_0.27_145)] h-1 cursor-pointer"
             />
             <div className="flex justify-between text-xs text-muted-foreground">

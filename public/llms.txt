@@ -1,0 +1,34 @@
+# GovZempic
+
+GovZempic is an interactive civic tool that lets users simulate cutting or slimming US, Polish, and Japanese government budget programs — and see the resulting Universal Basic Income (UBI) monthly dividend per citizen.
+
+## What it does
+
+- Users can "kill" (fully cut) or "slim" (50% cut) any government spending program
+- 50% of total savings are redistributed equally to all citizens as a UBI dividend
+- Supports USA, Poland, and Japan with real budget data (FY2026 CBO for US, 2024 data for PL/JP)
+- Includes preset scenarios (e.g. "Libertarian Gov" kills all welfare/entitlements, slims military)
+- Shows household income projections based on family size
+- Projects UBI growth over 5–20 years using GDP growth rate
+- Calculates debt-free year based on annual savings and economic growth compounding
+
+## Data sources
+
+- USA: CBO Budget and Economic Outlook FY2026, enacted appropriations
+- Poland: Ministry of Finance Budget Act 2024, ZUS Annual Report 2024, NFZ Financial Plan 2024
+- Japan: Ministry of Finance FY2024 Budget (令和6年度予算)
+
+## Key assumptions
+
+- 50% of program savings are distributed as UBI (remaining 50% reduces deficit/debt)
+- UBI is split equally across the full adult+child population of each country
+- "Slim" = 50% budget reduction; "Kill" = 100% elimination
+- Growth projections use compound annual GDP growth applied to UBI base
+
+## Tech stack
+
+Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Framer Motion
+
+## Purpose
+
+Educational and satirical political tool. Not affiliated with any government or political party.
