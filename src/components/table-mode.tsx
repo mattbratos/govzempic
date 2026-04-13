@@ -102,6 +102,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                 const isKilled = cut === "kill";
                 const isSlimmed = cut === "slim";
                 const isChild = item.parent !== null;
+                const killDisabled = !!item.no_kill;
 
                 return (
                   <motion.tr
@@ -164,13 +165,17 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     <td className="px-3 py-3">
                       <div className="flex gap-1 justify-center">
                         <button
-                          onClick={() => handleCutClick(item.id, "kill")}
-                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
-                            isKilled
-                              ? "border-destructive bg-destructive/20 text-destructive"
-                              : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => !killDisabled && handleCutClick(item.id, "kill")}
+                          disabled={killDisabled}
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${
+                            killDisabled
+                              ? "border-border text-muted-foreground/25 cursor-not-allowed"
+                              : isKilled
+                              ? "border-destructive bg-destructive/20 text-destructive terminal-glow"
+                              : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10 terminal-glow"
                           }`}
                           style={{ fontFamily: "var(--font-orbitron)" }}
+                          title={killDisabled ? item.cut_note ?? undefined : undefined}
                         >
                           {isKilled ? "KILLED ✕" : "KILL IT"}
                         </button>

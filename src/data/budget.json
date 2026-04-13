@@ -80,7 +80,8 @@
       "ubi_per_month": 124.38,
       "ubi_per_week": 28.70,
       "description": "Interest payments owed on $36T+ of accumulated national debt. Not a program — it's a bill that comes due no matter what.",
-      "cuttable": false,
+      "cuttable": true,
+      "no_kill": true,
       "cut_note": "Defaulting on debt payments would crash global financial markets and make borrowing nearly impossible."
     },
     {

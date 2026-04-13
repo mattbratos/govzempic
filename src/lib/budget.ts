@@ -16,6 +16,7 @@ export interface BudgetItem {
   ubi_per_week: number;
   description: string;
   cuttable: boolean;
+  no_kill?: boolean;
   cut_note: string | null;
 }
 
