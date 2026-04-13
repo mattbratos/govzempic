@@ -143,19 +143,19 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                       {isSlimmed ? (
                         <>
                           <span className="text-orange-400 line-through mr-1 opacity-50">
-                            ~${item.budget_billions >= 100
+                            ${item.budget_billions >= 100
                               ? Math.round(item.budget_billions)
                               : item.budget_billions.toFixed(1)}B
                           </span>
                           <span className="text-orange-400">
-                            ~${item.budget_billions >= 100
+                            ${item.budget_billions >= 100
                               ? Math.round(item.budget_billions / 2)
                               : (item.budget_billions / 2).toFixed(1)}B
                           </span>
                         </>
                       ) : (
                         <span className={isKilled ? "line-through text-muted-foreground/40" : ""}>
-                          ~${item.budget_billions >= 100
+                          ${item.budget_billions >= 100
                             ? Math.round(item.budget_billions)
                             : item.budget_billions.toFixed(1)}B
                         </span>
