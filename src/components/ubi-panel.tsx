@@ -2,6 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCuts } from "@/context/cuts-context";
+import { useCountry } from "@/context/country-context";
+import { formatCurrency } from "@/lib/countries";
 
 function AnimatedNumber({ value, decimals = 2 }: { value: number; decimals?: number }) {
   return (
@@ -25,8 +27,10 @@ export function UBIPanel() {
     killCount,
     slimCount,
   } = useCuts();
+  const { currency } = useCountry();
 
   const hasAnyCuts = totalCutBillions > 0;
+  const fmt = (usd: number) => formatCurrency(usd, currency);
 
   return (
     <div
@@ -55,7 +59,7 @@ export function UBIPanel() {
             }`}
             style={{ fontFamily: "var(--font-orbitron)" }}
           >
-            $<AnimatedNumber value={ubiPerMonth} decimals={2} />
+            {fmt(ubiPerMonth)}
           </div>
           <AnimatePresence>
             {hasAnyCuts && (
@@ -70,13 +74,13 @@ export function UBIPanel() {
                   <div className="flex justify-between items-baseline">
                     <span className="text-xs text-muted-foreground tracking-widest">PER_YEAR</span>
                     <span className="text-lg font-bold text-foreground tabular-nums">
-                      $<AnimatedNumber value={ubiPerYear} decimals={0} />
+                      {fmt(ubiPerYear)}
                     </span>
                   </div>
                   <div className="flex justify-between items-baseline">
                     <span className="text-xs text-muted-foreground tracking-widest">PER_WEEK</span>
                     <span className="text-base font-bold text-foreground tabular-nums">
-                      $<AnimatedNumber value={ubiPerWeek} decimals={2} />
+                      {fmt(ubiPerWeek)}
                     </span>
                   </div>
                 </div>

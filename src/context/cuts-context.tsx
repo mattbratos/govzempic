@@ -31,9 +31,11 @@ const CutsContext = createContext<CutsContextType | null>(null);
 export function CutsProvider({
   children,
   items,
+  population = 335_000_000,
 }: {
   children: React.ReactNode;
   items: BudgetItem[];
+  population?: number;
 }) {
   const [cuts, setCuts] = useState<Map<string, CutType>>(new Map());
 
@@ -81,7 +83,7 @@ export function CutsProvider({
         else slims++;
       }
 
-      const perYear = (total * 1e9 * 0.5) / 335_000_000;
+      const perYear = (total * 1e9 * 0.5) / population;
       return {
         killCount: kills,
         slimCount: slims,
@@ -90,7 +92,7 @@ export function CutsProvider({
         ubiPerMonth: perYear / 12,
         ubiPerWeek: perYear / 52,
       };
-    }, [cuts, items]);
+    }, [cuts, items, population]);
 
   return (
     <CutsContext.Provider

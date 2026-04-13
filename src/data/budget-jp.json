@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "fiscal_year": 2024,
+    "total_outlays_billions": 650,
+    "population": 125000000,
+    "ubi_share": 0.5,
+    "sources": [
+      "Japan Ministry of Finance: FY2024 Budget (令和6年度予算)",
+      "Cabinet Office Japan: Annual Report on the Aging Society 2024",
+      "Ministry of Finance Japan: Highlights of the FY2024 Budget",
+      "Bank of Japan: Government Debt Statistics 2024"
+    ],
+    "notes": "UBI figures assume 50% of savings distributed equally to all 125M Japanese residents. All figures converted from JPY at ~150 JPY/USD. Social security dominates Japan's budget reflecting one of the world's most rapidly aging populations."
+  },
+  "items": [
+    {
+      "id": "social-security",
+      "name": "Social Security (社会保障費 — Shakai Hoshō)",
+      "type": "mandatory",
+      "agency": "Ministry of Health, Labour and Welfare",
+      "parent": null,
+      "budget_billions": 290,
+      "ubi_per_year": 1160.0,
+      "ubi_per_month": 96.67,
+      "ubi_per_week": 22.31,
+      "description": "Japan's largest budget item covering national pension (Kokumin Nenkin), employee pension (Kosei Nenkin), public health insurance (Kokumin Kenko Hoken), long-term care insurance (Kaigo Hoken), and welfare assistance for 36M+ elderly in the world's most aged society.",
+      "cuttable": false,
+      "cut_note": "Japan has the world's oldest population (29% over 65). Cutting social security would devastate tens of millions of retirees with no alternative income source."
+    },
+    {
+      "id": "debt-servicing",
+      "name": "National Debt Service (国債費 — Kokusai-hi)",
+      "type": "interest",
+      "agency": "Ministry of Finance",
+      "parent": null,
+      "budget_billions": 80,
+      "ubi_per_year": 320.0,
+      "ubi_per_month": 26.67,
+      "ubi_per_week": 6.15,
+      "description": "Interest payments and principal redemption on Japan's national debt — the largest in the developed world at ~260% of GDP (~$10T). Japan's JGB market is the world's second-largest sovereign bond market.",
+      "cuttable": true,
+      "no_kill": true,
+      "no_slim": true,
+      "cut_note": "Defaulting on JGBs would collapse Japan's financial system and trigger a global bond market crisis given Japan's position as the world's largest creditor nation."
+    },
+    {
+      "id": "local-allocation-tax",
+      "name": "Local Allocation Tax Grants (地方交付税交付金 — Chiho Kofuzei)",
+      "type": "discretionary_nondefense",
+      "agency": "Ministry of Internal Affairs and Communications",
+      "parent": null,
+      "budget_billions": 55,
+      "ubi_per_year": 220.0,
+      "ubi_per_month": 18.33,
+      "ubi_per_week": 4.23,
+      "description": "Equalization transfers from the national government to Japan's 47 prefectures and ~1,700 municipalities to fund local government operations, schools, public safety, and social services in lower-tax rural areas.",
+      "cuttable": true,
+      "cut_note": null
+    },
+    {
+      "id": "defense-jsdf",
+      "name": "Defense — Japan Self-Defense Forces (防衛費 — Boei-hi)",
+      "type": "discretionary_defense",
+      "agency": "Ministry of Defense",
+      "parent": null,
+      "budget_billions": 50,
+      "ubi_per_year": 200.0,
+      "ubi_per_month": 16.67,
+      "ubi_per_week": 3.85,
+      "description": "Japan Self-Defense Forces (Ground, Maritime, Air) plus new Space and Cyber domains. Japan has dramatically increased defense spending since 2022, targeting 2% of GDP by 2027 — a historic shift from its postwar pacifist posture.",
+      "cuttable": true,
+      "cut_note": null
+    },
+    {
+      "id": "public-works",
+      "name": "Public Works (公共事業費 — Kōkyō Jigyō-hi)",
+      "type": "discretionary_nondefense",
+      "agency": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "parent": null,
+      "budget_billions": 45,
+      "ubi_per_year": 180.0,
+      "ubi_per_month": 15.0,
+      "ubi_per_week": 3.46,
+      "description": "Roads, bridges, ports, flood control, earthquake-resistant infrastructure, and rural development projects. Japan's mountainous terrain and seismic activity require constant infrastructure investment and disaster preparedness.",
+      "cuttable": true,
+      "cut_note": null
+    },
+    {
+      "id": "education-science",
+      "name": "Education, Culture & Science (文部科学省 — MEXT)",
+      "type": "discretionary_nondefense",
+      "agency": "Ministry of Education, Culture, Sports, Science and Technology",
+      "parent": null,
+      "budget_billions": 35,
+      "ubi_per_year": 140.0,
+      "ubi_per_month": 11.67,
+      "ubi_per_week": 2.69,
+      "description": "Compulsory education subsidies to prefectures, national university operational grants, Japan Society for the Promotion of Science (JSPS) research funding, cultural preservation, and the Japan Aerospace Exploration Agency (JAXA).",
+      "cuttable": true,
+      "cut_note": null
+    },
+    {
+      "id": "economic-aid",
+      "name": "Economic Cooperation & ODA (経済協力費)",
+      "type": "discretionary_nondefense",
+      "agency": "Ministry of Foreign Affairs / JICA",
+      "parent": null,
+      "budget_billions": 25,
+      "ubi_per_year": 100.0,
+      "ubi_per_month": 8.33,
+      "ubi_per_week": 1.92,
+      "description": "Japan's Official Development Assistance (ODA) — one of the world's largest bilateral aid programs. Funds infrastructure projects, technical cooperation, and humanitarian assistance across Asia, Africa, and Latin America via JICA.",
+      "cuttable": true,
+      "cut_note": null
+    },
+    {
+      "id": "other-expenditures",
+      "name": "Other Government Expenditures (その他の歳出)",
+      "type": "discretionary_nondefense",
+      "agency": "Various Ministries",
+      "parent": null,
+      "budget_billions": 70,
+      "ubi_per_year": 280.0,
+      "ubi_per_month": 23.33,
+      "ubi_per_week": 5.38,
+      "description": "Remaining budget across all ministries: trade and industry (METI) subsidies including semiconductor incentives (Rapidus, TSMC Kumamoto), agriculture (food self-sufficiency programs), justice, parliamentary operations, and emergency reserve funds.",
+      "cuttable": true,
+      "cut_note": null
+    }
+  ]
+}

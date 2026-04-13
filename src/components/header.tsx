@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeToggle } from "./theme-toggle";
+import { CountrySelector } from "./country-selector";
 
 export function Header() {
   return (
@@ -27,6 +28,7 @@ export function Header() {
 
         <div className="flex-1" />
 
+        <CountrySelector />
         <ThemeToggle />
       </div>
     </header>

@@ -2,7 +2,7 @@
   "meta": {
     "fiscal_year": 2026,
     "total_outlays_billions": 7400,
-    "us_population": 335000000,
+    "population": 335000000,
     "ubi_share": 0.5,
     "sources": [
       "CBO Budget and Economic Outlook: 2026–2036 (February 2026)",

@@ -4,12 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { BudgetItem } from "@/lib/budget";
 import { useCuts, CutType } from "@/context/cuts-context";
+import { useCountry } from "@/context/country-context";
+import { formatCurrency } from "@/lib/countries";
 
 type SortKey = "budget_billions" | "name";
 type SortDir = "asc" | "desc";
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
   const { getCut, setCut, setCutBulk, removeCut, resetCuts, cuts } = useCuts();
+  const { currency } = useCountry();
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [showChildren, setShowChildren] = useState(false);
@@ -168,9 +171,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
 
                     {/* UBI/mo */}
                     <td className="px-3 py-4 text-right tabular-nums whitespace-nowrap text-muted-foreground">
-                      +${isSlimmed
-                        ? (item.ubi_per_month * 0.5).toFixed(2)
-                        : item.ubi_per_month.toFixed(2)}
+                      +{formatCurrency(isSlimmed ? item.ubi_per_month * 0.5 : item.ubi_per_month, currency)}
                     </td>
 
                     {/* Action */}

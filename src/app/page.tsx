@@ -1,18 +1,24 @@
-import budgetData from "@/data/budget.json";
+import budgetUS from "@/data/budget.json";
+import budgetPL from "@/data/budget-pl.json";
+import budgetJP from "@/data/budget-jp.json";
 import { BudgetData } from "@/lib/budget";
-import { CutsProvider } from "@/context/cuts-context";
+import { CountryProvider } from "@/context/country-context";
 import { Header } from "@/components/header";
 import { AppContent } from "@/components/app-content";
 
-const data = budgetData as unknown as BudgetData;
+const allBudgets: Record<string, BudgetData> = {
+  us: budgetUS as unknown as BudgetData,
+  pl: budgetPL as unknown as BudgetData,
+  jp: budgetJP as unknown as BudgetData,
+};
 
 export default function Page() {
   return (
-    <CutsProvider items={data.items}>
+    <CountryProvider allBudgets={allBudgets}>
       <Header />
       <main className="flex-1">
-        <AppContent items={data.items} />
+        <AppContent />
       </main>
-    </CutsProvider>
+    </CountryProvider>
   );
 }
