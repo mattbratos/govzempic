@@ -124,7 +124,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                           <span className="text-muted-foreground/30 shrink-0">└─</span>
                         )}
                         <p
-                          className={`font-bold tracking-wide ${
+                          className={`tracking-wide ${
                             isKilled
                               ? "line-through text-muted-foreground/40"
                               : isSlimmed
@@ -139,7 +139,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     </td>
 
                     {/* Budget */}
-                    <td className="px-3 py-4 text-right font-mono font-bold tabular-nums whitespace-nowrap">
+                    <td className="px-3 py-4 text-right font-mono tabular-nums whitespace-nowrap">
                       {isSlimmed ? (
                         <>
                           <span className="text-orange-400 line-through mr-1 opacity-50">
