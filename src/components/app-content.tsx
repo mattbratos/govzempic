@@ -12,15 +12,21 @@ export function AppContent({ items }: { items: BudgetItem[] }) {
         <UBIBar />
       </div>
 
-      {/* Desktop: table + sticky side panel */}
-      <div className="flex min-h-[calc(100vh-3.5rem)]">
-        <div className="flex-1 min-w-0 overflow-hidden">
-          <TableMode items={items} />
-        </div>
+      {/* Centred container with max width */}
+      <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:max-w-none lg:px-0 lg:py-0">
+        {/* Desktop: table (max-w-4xl) + sticky UBI panel side by side */}
+        <div className="lg:flex lg:justify-center lg:gap-0 min-h-[calc(100vh-3.5rem)]">
 
-        {/* Sticky UBI panel */}
-        <div className="hidden lg:block w-64 shrink-0 border-l border-border sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto">
-          <UBIPanel />
+          {/* Table — capped at 4xl */}
+          <div className="w-full lg:max-w-4xl lg:min-w-0 lg:flex-shrink-0">
+            <TableMode items={items} />
+          </div>
+
+          {/* Sticky UBI panel */}
+          <div className="hidden lg:block w-72 shrink-0 border-l border-border sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto">
+            <UBIPanel />
+          </div>
+
         </div>
       </div>
     </>
