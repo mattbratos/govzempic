@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { BudgetItem, ItemType, TYPE_LABELS } from "@/lib/budget";
-import { useCuts } from "@/context/cuts-context";
+import { useCuts, CutType } from "@/context/cuts-context";
 
 type SortKey = "budget_billions" | "ubi_per_month" | "name";
 type SortDir = "asc" | "desc";
@@ -13,7 +13,7 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "all", label: "ALL" },
   { key: "mandatory", label: "MANDATORY" },
   { key: "discretionary_defense", label: "DEFENSE" },
-  { key: "discretionary_nondefense", label: "DISCRETIONARY" },
+  { key: "discretionary_nondefense", label: "DISCR." },
   { key: "interest", label: "DEBT" },
   { key: "cuttable", label: "CUTTABLE" },
 ];
@@ -26,7 +26,7 @@ const TYPE_TAG_COLOR: Record<ItemType, string> = {
 };
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
-  const { toggleCut, isCut, cuts } = useCuts();
+  const { getCut, setCut, removeCut, cuts } = useCuts();
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [filter, setFilter] = useState<Filter>("all");
@@ -53,11 +53,17 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
   const sortIcon = (key: SortKey) =>
     sortKey === key ? (sortDir === "desc" ? " ▼" : " ▲") : " ·";
 
-  const cutCount = filtered.filter((i) => isCut(i.id)).length;
+  const handleCutClick = (id: string, type: CutType) => {
+    const current = getCut(id);
+    if (current === type) removeCut(id);   // toggle off
+    else setCut(id, type);                  // set or upgrade/downgrade
+  };
+
+  const cutCount = filtered.filter((i) => cuts.has(i.id)).length;
 
   return (
     <div
-      className="px-4 py-6 max-w-7xl mx-auto"
+      className="px-4 py-5"
       style={{ fontFamily: "var(--font-space-mono)" }}
     >
       {/* Toolbar */}
@@ -78,13 +84,12 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
             </button>
           ))}
         </div>
-
         <button
           onClick={() => setShowChildren((v) => !v)}
           className="ml-auto px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
           style={{ fontFamily: "var(--font-orbitron)" }}
         >
-          {showChildren ? "– SUB-AGENCIES" : "+ SUB-AGENCIES"}
+          {showChildren ? "– SUB" : "+ SUB"}
         </button>
       </div>
 
@@ -93,13 +98,10 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
-          className="mb-4 px-4 py-2 border border-destructive/30 bg-destructive/5 flex items-center gap-4 text-xs"
+          className="mb-4 px-4 py-2 border border-border flex items-center gap-4 text-xs bg-muted/10"
         >
-          <span className="text-destructive tracking-widest">
-            AXED: {cutCount} IN VIEW
-          </span>
-          <span className="text-muted-foreground">
-            // {cuts.size} TOTAL &nbsp;·&nbsp; SEE HEADER FOR DIVIDEND
+          <span className="text-muted-foreground tracking-widest">
+            {cutCount} PROGRAMS TARGETED IN VIEW &nbsp;//&nbsp; {cuts.size} TOTAL
           </span>
         </motion.div>
       )}
@@ -110,7 +112,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
           <table className="w-full text-xs">
             <thead className="bg-muted/30 border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-bold tracking-widest text-muted-foreground w-full uppercase">
+                <th className="text-left px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase w-full">
                   <button
                     onClick={() => handleSort("name")}
                     className="hover:text-primary transition-colors"
@@ -119,11 +121,13 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     PROGRAM{sortIcon("name")}
                   </button>
                 </th>
-                <th className="text-left px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap hidden md:table-cell"
-                  style={{ fontFamily: "var(--font-orbitron)" }}>
+                <th
+                  className="text-left px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap hidden md:table-cell"
+                  style={{ fontFamily: "var(--font-orbitron)" }}
+                >
                   TYPE
                 </th>
-                <th className="text-right px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap">
+                <th className="text-right px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap">
                   <button
                     onClick={() => handleSort("budget_billions")}
                     className="hover:text-primary transition-colors"
@@ -132,7 +136,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     BUDGET{sortIcon("budget_billions")}
                   </button>
                 </th>
-                <th className="text-right px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap hidden sm:table-cell">
+                <th className="text-right px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap hidden sm:table-cell">
                   <button
                     onClick={() => handleSort("ubi_per_month")}
                     className="hover:text-primary transition-colors"
@@ -141,55 +145,63 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     UBI/MO{sortIcon("ubi_per_month")}
                   </button>
                 </th>
-                <th className="text-right px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap hidden lg:table-cell"
-                  style={{ fontFamily: "var(--font-orbitron)" }}>
-                  UBI/YR
-                </th>
-                <th className="px-4 py-3 font-bold tracking-widest text-muted-foreground uppercase text-center whitespace-nowrap"
-                  style={{ fontFamily: "var(--font-orbitron)" }}>
+                <th
+                  className="px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase text-center whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-orbitron)" }}
+                >
                   ACTION
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((item) => {
-                const cut = isCut(item.id);
+                const cut = getCut(item.id);
+                const isKilled = cut === "kill";
+                const isSlimmed = cut === "slim";
                 const isChild = item.parent !== null;
+
                 return (
                   <motion.tr
                     key={item.id}
                     layout
-                    className={`transition-colors group ${
-                      cut ? "bg-destructive/5" : "hover:bg-muted/20"
+                    className={`transition-colors ${
+                      isKilled
+                        ? "bg-destructive/8"
+                        : isSlimmed
+                        ? "bg-orange-500/5"
+                        : "hover:bg-muted/15"
                     } ${isChild ? "opacity-60" : ""}`}
                   >
                     {/* Name */}
                     <td className="px-4 py-3">
                       <div className="flex items-start gap-2">
                         {isChild && (
-                          <span className="text-muted-foreground/30 shrink-0">
-                            └─
-                          </span>
+                          <span className="text-muted-foreground/30 shrink-0">└─</span>
                         )}
                         <div>
                           <p
                             className={`font-bold tracking-wide ${
-                              cut
-                                ? "line-through text-muted-foreground/50"
+                              isKilled
+                                ? "line-through text-muted-foreground/40"
+                                : isSlimmed
+                                ? "text-orange-400/80"
                                 : "text-foreground"
                             }`}
                           >
+                            {isSlimmed && (
+                              <span className="text-orange-400 mr-1">~</span>
+                            )}
                             {item.name}
                           </p>
-                          <p className="text-muted-foreground/60 hidden md:block mt-0.5 line-clamp-1 max-w-xs text-xs">
-                            // {item.description.slice(0, 72)}
+                          <p className="text-muted-foreground/50 hidden md:block mt-0.5 line-clamp-1 max-w-xs">
+                            // {item.description.slice(0, 70)}
                           </p>
                         </div>
                       </div>
                     </td>
 
                     {/* Type */}
-                    <td className="px-4 py-3 hidden md:table-cell">
+                    <td className="px-3 py-3 hidden md:table-cell">
                       <span
                         className={`text-xs font-bold px-2 py-0.5 border tracking-widest ${TYPE_TAG_COLOR[item.type]}`}
                         style={{ fontFamily: "var(--font-orbitron)" }}
@@ -199,41 +211,72 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                     </td>
 
                     {/* Budget */}
-                    <td className="px-4 py-3 text-right font-mono font-bold tabular-nums whitespace-nowrap">
-                      $
-                      {item.budget_billions >= 100
-                        ? Math.round(item.budget_billions)
-                        : item.budget_billions.toFixed(1)}
-                      B
+                    <td className="px-3 py-3 text-right font-mono font-bold tabular-nums whitespace-nowrap">
+                      {isSlimmed && (
+                        <span className="text-orange-400 line-through mr-1 opacity-50">
+                          ${item.budget_billions >= 100
+                            ? Math.round(item.budget_billions)
+                            : item.budget_billions.toFixed(1)}B
+                        </span>
+                      )}
+                      {isSlimmed ? (
+                        <span className="text-orange-400">
+                          ${item.budget_billions >= 100
+                            ? Math.round(item.budget_billions / 2)
+                            : (item.budget_billions / 2).toFixed(1)}B
+                        </span>
+                      ) : (
+                        <span className={isKilled ? "line-through text-muted-foreground/40" : ""}>
+                          ${item.budget_billions >= 100
+                            ? Math.round(item.budget_billions)
+                            : item.budget_billions.toFixed(1)}B
+                        </span>
+                      )}
                     </td>
 
                     {/* UBI/mo */}
-                    <td className="px-4 py-3 text-right font-mono tabular-nums text-primary whitespace-nowrap hidden sm:table-cell">
-                      +${item.ubi_per_month.toFixed(2)}
-                    </td>
-
-                    {/* UBI/yr */}
-                    <td className="px-4 py-3 text-right font-mono tabular-nums text-muted-foreground whitespace-nowrap hidden lg:table-cell">
-                      +${item.ubi_per_year.toFixed(0)}
+                    <td className="px-3 py-3 text-right font-mono tabular-nums whitespace-nowrap hidden sm:table-cell">
+                      <span className={isKilled ? "text-destructive" : isSlimmed ? "text-orange-400" : "text-primary"}>
+                        +${isSlimmed
+                          ? (item.ubi_per_month * 0.5).toFixed(2)
+                          : item.ubi_per_month.toFixed(2)}
+                      </span>
                     </td>
 
                     {/* Action */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-3 py-3">
                       {item.cuttable ? (
-                        <button
-                          onClick={() => toggleCut(item.id)}
-                          className={`px-3 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow ${
-                            cut
-                              ? "border-destructive/50 text-destructive bg-destructive/10 hover:bg-transparent hover:text-muted-foreground hover:border-border"
-                              : "border-border text-muted-foreground hover:border-destructive/60 hover:text-destructive hover:bg-destructive/5"
-                          }`}
-                          style={{ fontFamily: "var(--font-orbitron)" }}
-                        >
-                          {cut ? "AXED ✕" : "AXE IT"}
-                        </button>
+                        <div className="flex gap-1 justify-center">
+                          {/* KILL IT */}
+                          <button
+                            onClick={() => handleCutClick(item.id, "kill")}
+                            className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
+                              isKilled
+                                ? "border-destructive bg-destructive/20 text-destructive"
+                                : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10"
+                            }`}
+                            style={{ fontFamily: "var(--font-orbitron)" }}
+                            title="Eliminate entirely (100%)"
+                          >
+                            {isKilled ? "KILLED ✕" : "KILL IT"}
+                          </button>
+                          {/* SLIM IT */}
+                          <button
+                            onClick={() => handleCutClick(item.id, "slim")}
+                            className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
+                              isSlimmed
+                                ? "border-orange-500 bg-orange-500/15 text-orange-400"
+                                : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5"
+                            }`}
+                            style={{ fontFamily: "var(--font-orbitron)" }}
+                            title="Cut budget by 50%"
+                          >
+                            {isSlimmed ? "SLIMMED ~" : "SLIM IT"}
+                          </button>
+                        </div>
                       ) : (
                         <span
-                          className="text-muted-foreground/30 tracking-widest cursor-help"
+                          className="text-muted-foreground/25 tracking-widest text-center block"
                           title={item.cut_note ?? ""}
                           style={{ fontFamily: "var(--font-orbitron)" }}
                         >
@@ -249,8 +292,8 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground/40 mt-3 text-right tracking-widest">
-        // FY2026 · CBO PROJECTIONS · 50% OF SAVINGS TO 335M AMERICANS
+      <p className="text-xs text-muted-foreground/30 mt-3 text-right tracking-widest">
+        // FY2026 · CBO · 50% OF SAVINGS TO 335M AMERICANS
       </p>
     </div>
   );
