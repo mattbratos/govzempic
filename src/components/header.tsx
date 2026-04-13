@@ -5,8 +5,7 @@ import { useCuts } from "@/context/cuts-context";
 import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
-  const { mode, setMode, totalCutBillions, ubiPerMonth, ubiPerYear, cutCount } =
-    useCuts();
+  const { totalCutBillions, ubiPerMonth, ubiPerYear, cutCount } = useCuts();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background">
@@ -21,24 +20,6 @@ export function Header() {
           GOV<span className="text-destructive">ZEMPIC</span>
           <span className="cursor text-muted-foreground" />
         </a>
-
-        {/* Mode toggle */}
-        <div className="flex border border-border shrink-0">
-          {(["tinder", "table"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              className={`px-4 py-1.5 text-xs font-bold tracking-widest uppercase transition-all terminal-glow ${
-                mode === m
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-              style={{ fontFamily: "var(--font-orbitron)" }}
-            >
-              {m === "tinder" ? "[ SWIPE ]" : "[ TABLE ]"}
-            </button>
-          ))}
-        </div>
 
         {/* UBI counter */}
         <div className="flex-1 flex items-center justify-center min-w-0 font-mono">

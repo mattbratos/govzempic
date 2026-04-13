@@ -9,12 +9,8 @@ import {
 } from "react";
 import { BudgetItem } from "@/lib/budget";
 
-type Mode = "tinder" | "table";
-
 interface CutsContextType {
   cuts: Set<string>;
-  mode: Mode;
-  setMode: (mode: Mode) => void;
   toggleCut: (id: string) => void;
   isCut: (id: string) => boolean;
   cutCount: number;
@@ -34,7 +30,6 @@ export function CutsProvider({
   items: BudgetItem[];
 }) {
   const [cuts, setCuts] = useState<Set<string>>(new Set());
-  const [mode, setMode] = useState<Mode>("tinder");
 
   const toggleCut = useCallback((id: string) => {
     setCuts((prev) => {
@@ -49,10 +44,9 @@ export function CutsProvider({
 
   const { totalCutBillions, ubiPerYear, ubiPerMonth, ubiPerWeek, cutCount } =
     useMemo(() => {
-      // Avoid double-counting: if both a parent and child are cut, only count parent
       const cutItems = items.filter((i) => {
         if (!cuts.has(i.id)) return false;
-        if (i.parent && cuts.has(i.parent)) return false; // parent already counted
+        if (i.parent && cuts.has(i.parent)) return false;
         return true;
       });
       const total = cutItems.reduce((s, i) => s + i.budget_billions, 0);
@@ -70,8 +64,6 @@ export function CutsProvider({
     <CutsContext.Provider
       value={{
         cuts,
-        mode,
-        setMode,
         toggleCut,
         isCut,
         cutCount,
