@@ -37,7 +37,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
   };
 
   return (
-    <div className="px-4 py-5">
+    <div className="px-4 py-5" style={{ fontFamily: "var(--font-geist-mono)" }}>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1.5 mb-4 justify-end">
         <button

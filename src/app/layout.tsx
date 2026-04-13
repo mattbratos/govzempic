@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Space_Mono } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${orbitron.variable} ${spaceMono.variable} ${GeistSans.variable} h-full`}
+      className={`${orbitron.variable} ${spaceMono.variable} ${GeistSans.variable} ${GeistMono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
