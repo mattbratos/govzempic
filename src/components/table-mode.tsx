@@ -147,10 +147,6 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                   style={{ fontFamily: "var(--font-orbitron)" }}>
                   TYPE
                 </th>
-                <th className="text-left px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase hidden lg:table-cell"
-                  style={{ fontFamily: "var(--font-orbitron)" }}>
-                  WHAT IT DOES
-                </th>
                 <th className="text-right px-3 py-3 font-bold tracking-widest text-muted-foreground uppercase whitespace-nowrap"
                   style={{ fontFamily: "var(--font-orbitron)" }}>
                   <button onClick={() => handleSort("budget_billions")} className="hover:text-primary transition-colors">
@@ -211,11 +207,6 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                       >
                         {TYPE_LABELS[item.type].toUpperCase()}
                       </span>
-                    </td>
-
-                    {/* Description */}
-                    <td className="px-3 py-3 hidden lg:table-cell text-muted-foreground/60 max-w-xs">
-                      <span className="line-clamp-2 leading-relaxed">{item.description}</span>
                     </td>
 
                     {/* Budget */}
