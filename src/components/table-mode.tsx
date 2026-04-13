@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { BudgetItem } from "@/lib/budget";
 import { useCuts, CutType } from "@/context/cuts-context";
-import { useCountry } from "@/context/country-context";
+import { useCountry, COUNTRIES, CURRENCIES } from "@/context/country-context";
 import { formatCurrency } from "@/lib/countries";
 
 type SortKey = "budget_billions" | "name";
@@ -12,7 +12,7 @@ type SortDir = "asc" | "desc";
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
   const { getCut, setCut, setCutBulk, removeCut, resetCuts, cuts } = useCuts();
-  const { currency } = useCountry();
+  const { currency, countryId, setCountryId, currencyCode, setCurrencyCode } = useCountry();
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [showChildren, setShowChildren] = useState(false);
@@ -42,7 +42,31 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
   return (
     <div className="px-4 py-5" style={{ fontFamily: "var(--font-geist-mono)" }}>
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-4 justify-end">
+      <div className="flex flex-wrap items-center gap-1.5 mb-4">
+        {/* Country + currency selectors */}
+        <select
+          value={countryId}
+          onChange={(e) => setCountryId(e.target.value)}
+          className="bg-background border border-border text-foreground text-xs px-2 py-1.5 tracking-widest cursor-pointer hover:border-primary/60 transition-colors"
+          style={{ fontFamily: "var(--font-orbitron)" }}
+        >
+          {COUNTRIES.map((c) => (
+            <option key={c.id} value={c.id}>{c.flag} {c.name.toUpperCase()}</option>
+          ))}
+        </select>
+        <select
+          value={currencyCode}
+          onChange={(e) => setCurrencyCode(e.target.value)}
+          className="bg-background border border-border text-foreground text-xs px-2 py-1.5 tracking-widest cursor-pointer hover:border-primary/60 transition-colors"
+          style={{ fontFamily: "var(--font-orbitron)" }}
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>{c.symbol} {c.code}</option>
+          ))}
+        </select>
+
+        {/* Bulk actions */}
+        <div className="flex gap-1.5">
         <button
           onClick={() => setCutBulk(filtered.map((i) => i.id), "kill")}
           className="px-3 py-1 text-xs font-bold tracking-widest border border-destructive/40 text-destructive/70 hover:border-destructive hover:text-destructive hover:bg-destructive/10 transition-all terminal-glow"
@@ -73,6 +97,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
             RESET
           </button>
         )}
+        </div>
       </div>
 
       {/* Table */}
