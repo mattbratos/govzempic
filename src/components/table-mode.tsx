@@ -219,44 +219,30 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
 
                     {/* Action */}
                     <td className="px-3 py-3">
-                      {item.cuttable ? (
-                        <div className="flex gap-1 justify-center">
-                          {/* KILL IT */}
-                          <button
-                            onClick={() => handleCutClick(item.id, "kill")}
-                            className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
-                              isKilled
-                                ? "border-destructive bg-destructive/20 text-destructive"
-                                : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10"
-                            }`}
-                            style={{ fontFamily: "var(--font-orbitron)" }}
-                            title="Eliminate entirely (100%)"
-                          >
-                            {isKilled ? "KILLED ✕" : "KILL IT"}
-                          </button>
-                          {/* SLIM IT */}
-                          <button
-                            onClick={() => handleCutClick(item.id, "slim")}
-                            className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
-                              isSlimmed
-                                ? "border-orange-500 bg-orange-500/15 text-orange-400"
-                                : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5"
-                            }`}
-                            style={{ fontFamily: "var(--font-orbitron)" }}
-                            title="Cut budget by 50%"
-                          >
-                            {isSlimmed ? "SLIMMED ~" : "SLIM IT"}
-                          </button>
-                        </div>
-                      ) : (
-                        <span
-                          className="text-muted-foreground/25 tracking-widest text-center block"
-                          title={item.cut_note ?? ""}
+                      <div className="flex gap-1 justify-center">
+                        <button
+                          onClick={() => handleCutClick(item.id, "kill")}
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
+                            isKilled
+                              ? "border-destructive bg-destructive/20 text-destructive"
+                              : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10"
+                          }`}
                           style={{ fontFamily: "var(--font-orbitron)" }}
                         >
-                          LOCKED
-                        </span>
-                      )}
+                          {isKilled ? "KILLED ✕" : "KILL IT"}
+                        </button>
+                        <button
+                          onClick={() => handleCutClick(item.id, "slim")}
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all terminal-glow whitespace-nowrap ${
+                            isSlimmed
+                              ? "border-orange-500 bg-orange-500/15 text-orange-400"
+                              : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5"
+                          }`}
+                          style={{ fontFamily: "var(--font-orbitron)" }}
+                        >
+                          {isSlimmed ? "SLIMMED ~" : "SLIM IT"}
+                        </button>
+                      </div>
                     </td>
                   </motion.tr>
                 );
