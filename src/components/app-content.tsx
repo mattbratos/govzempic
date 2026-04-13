@@ -18,7 +18,7 @@ export function AppContent({ items }: { items: BudgetItem[] }) {
         <div className="lg:flex lg:justify-center lg:gap-0 min-h-[calc(100vh-3.5rem)]">
 
           {/* Table — capped at 6xl */}
-          <div className="w-full lg:max-w-3xl lg:min-w-0 lg:flex-shrink-0">
+          <div className="w-full lg:max-w-4xl lg:min-w-0 lg:flex-shrink-0">
             <TableMode items={items} />
           </div>
 
