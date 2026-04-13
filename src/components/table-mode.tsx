@@ -11,8 +11,45 @@ type SortKey = "budget_billions" | "name";
 type SortDir = "asc" | "desc";
 
 export function TableMode({ items }: { items: BudgetItem[] }) {
-  const { getCut, setCut, setCutBulk, removeCut, resetCuts, cuts } = useCuts();
+  const { getCut, setCut, setCutBulk, setPreset, removeCut, resetCuts, cuts } = useCuts();
+
   const { currency, countryId, setCountryId, currencyCode, setCurrencyCode } = useCountry();
+
+  // Libertarian preset: kill all welfare/entitlements, slim admin/military, leave the rest
+  const LIBERTARIAN_KILLS_BY_COUNTRY: Record<string, string[]> = {
+    us: [
+      "social-security-retirement", "social-security-disability",
+      "medicare", "medicaid", "snap", "ssi", "eitc", "child-tax-credit",
+      "unemployment-insurance", "tanf", "aca-subsidies", "chip",
+      "federal-housing", "federal-retirement", "hhs", "education",
+      "hud", "labor", "cpb-npr-pbs", "sba",
+      "veterans-affairs", "veterans-benefits-mandatory",
+      "nsf",
+    ],
+    pl: [
+      "zus", "nfz", "social-welfare", "science-universities",
+      "education", "local-gov-transfers", "agriculture",
+    ],
+    jp: [
+      "social-security", "economic-aid", "other-expenditures", "education-science",
+    ],
+  };
+  const LIBERTARIAN_SLIMS_BY_COUNTRY: Record<string, string[]> = {
+    us: [
+      "department-of-defense",
+      "transportation", "treasury", "doj", "state-usaid",
+      "homeland-security", "financial-services", "agriculture",
+      "commerce", "legislative-branch", "epa", "nasa",
+    ],
+    pl: [
+      "defense", "police-security", "infrastructure",
+    ],
+    jp: [
+      "local-allocation-tax", "public-works", "defense-jsdf",
+    ],
+  };
+  const LIBERTARIAN_KILLS = LIBERTARIAN_KILLS_BY_COUNTRY[countryId] ?? [];
+  const LIBERTARIAN_SLIMS = LIBERTARIAN_SLIMS_BY_COUNTRY[countryId] ?? [];
   const [sortKey, setSortKey] = useState<SortKey>("budget_billions");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [showChildren, setShowChildren] = useState(false);
@@ -67,36 +104,44 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
 
         {/* Bulk actions — right side */}
         <div className="ml-auto flex gap-1.5">
-        <button
-          onClick={() => setCutBulk(filtered.map((i) => i.id), "kill")}
-          className="px-3 py-1 text-xs font-bold tracking-widest border border-destructive/40 text-destructive/70 hover:border-destructive hover:text-destructive hover:bg-destructive/10 transition-all terminal-glow"
-          style={{ fontFamily: "var(--font-orbitron)" }}
-        >
-          KILL ALL
-        </button>
-        <button
-          onClick={() => setCutBulk(filtered.map((i) => i.id), "slim")}
-          className="px-3 py-1 text-xs font-bold tracking-widest border border-orange-500/40 text-orange-500/70 hover:border-orange-500 hover:text-orange-400 hover:bg-orange-500/5 transition-all terminal-glow"
-          style={{ fontFamily: "var(--font-orbitron)" }}
-        >
-          SLIM ALL
-        </button>
-        <button
-          onClick={() => setShowChildren((v) => !v)}
-          className="px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
-          style={{ fontFamily: "var(--font-orbitron)" }}
-        >
-          {showChildren ? "– SUB" : "+ SUB"}
-        </button>
-        {cuts.size > 0 && (
           <button
-            onClick={resetCuts}
+            onClick={() => setPreset(LIBERTARIAN_KILLS, LIBERTARIAN_SLIMS)}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-[oklch(0.88_0.27_145)]/40 text-[oklch(0.88_0.27_145)]/70 hover:border-[oklch(0.88_0.27_145)] hover:text-[oklch(0.88_0.27_145)] hover:bg-[oklch(0.88_0.27_145)]/5 transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+            title="Kill entitlements, slim admin & military — let UBI replace it all"
+          >
+            $$ LIBERTARIAN GOV $$
+          </button>
+          <button
+            onClick={() => setCutBulk(filtered.filter((i) => !i.no_kill).map((i) => i.id), "kill")}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-destructive/40 text-destructive/70 hover:border-destructive hover:text-destructive hover:bg-destructive/10 transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            KILL ALL
+          </button>
+          <button
+            onClick={() => setCutBulk(filtered.filter((i) => !i.no_slim).map((i) => i.id), "slim")}
+            className="px-3 py-1 text-xs font-bold tracking-widest border border-orange-500/40 text-orange-500/70 hover:border-orange-500 hover:text-orange-400 hover:bg-orange-500/5 transition-all terminal-glow"
+            style={{ fontFamily: "var(--font-orbitron)" }}
+          >
+            SLIM ALL
+          </button>
+          <button
+            onClick={() => setShowChildren((v) => !v)}
             className="px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
             style={{ fontFamily: "var(--font-orbitron)" }}
           >
-            RESET
+            {showChildren ? "– SUB" : "+ SUB"}
           </button>
-        )}
+          {cuts.size > 0 && (
+            <button
+              onClick={resetCuts}
+              className="px-3 py-1 text-xs font-bold tracking-widest border border-border text-muted-foreground hover:border-primary/60 hover:text-primary transition-all terminal-glow"
+              style={{ fontFamily: "var(--font-orbitron)" }}
+            >
+              RESET
+            </button>
+          )}
         </div>
       </div>
 
@@ -141,13 +186,12 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                   <motion.tr
                     key={item.id}
                     layout
-                    className={`transition-colors ${
-                      isKilled
-                        ? "bg-destructive/8"
-                        : isSlimmed
+                    className={`transition-colors ${isKilled
+                      ? "bg-destructive/8"
+                      : isSlimmed
                         ? "bg-orange-500/5"
                         : "hover:bg-muted/15"
-                    } ${isChild ? "opacity-60" : ""}`}
+                      } ${isChild ? "opacity-60" : ""}`}
                   >
                     {/* Name */}
                     <td className="px-4 py-4 whitespace-nowrap">
@@ -156,13 +200,12 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                           <span className="text-muted-foreground/30 shrink-0">└─</span>
                         )}
                         <p
-                          className={`tracking-wide ${
-                            isKilled
-                              ? "line-through text-muted-foreground/40"
-                              : isSlimmed
+                          className={`tracking-wide ${isKilled
+                            ? "line-through text-muted-foreground/40"
+                            : isSlimmed
                               ? "text-orange-400/80"
                               : "text-foreground"
-                          }`}
+                            }`}
                         >
                           {isSlimmed && <span className="text-orange-400 mr-1">~</span>}
                           {item.name}
@@ -205,13 +248,12 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                         <button
                           onClick={() => !killDisabled && handleCutClick(item.id, "kill")}
                           disabled={killDisabled}
-                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${
-                            killDisabled
-                              ? "border-border text-muted-foreground/25 cursor-not-allowed"
-                              : isKilled
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${killDisabled
+                            ? "border-border text-muted-foreground/25 cursor-not-allowed"
+                            : isKilled
                               ? "border-destructive bg-destructive/20 text-destructive terminal-glow"
                               : "border-destructive/30 text-destructive/60 hover:border-destructive hover:text-destructive hover:bg-destructive/10 terminal-glow"
-                          }`}
+                            }`}
                           style={{ fontFamily: "var(--font-orbitron)" }}
                           title={killDisabled ? item.cut_note ?? undefined : undefined}
                         >
@@ -220,13 +262,12 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
                         <button
                           onClick={() => !slimDisabled && handleCutClick(item.id, "slim")}
                           disabled={slimDisabled}
-                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${
-                            slimDisabled
-                              ? "border-border text-muted-foreground/25 cursor-not-allowed"
-                              : isSlimmed
+                          className={`px-2 py-1 text-xs font-bold tracking-widest border transition-all whitespace-nowrap ${slimDisabled
+                            ? "border-border text-muted-foreground/25 cursor-not-allowed"
+                            : isSlimmed
                               ? "border-orange-500 bg-orange-500/15 text-orange-400 terminal-glow"
                               : "border-orange-500/30 text-orange-500/50 hover:border-orange-500/70 hover:text-orange-400 hover:bg-orange-500/5 terminal-glow"
-                          }`}
+                            }`}
                           style={{ fontFamily: "var(--font-orbitron)" }}
                           title={slimDisabled ? item.cut_note ?? undefined : undefined}
                         >
@@ -242,7 +283,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground/30 mt-3 text-right tracking-widest">
+      <p className="text-xs text-muted-foreground mt-3 text-right tracking-widest">
         // FY2026 · CBO · 50% OF SAVINGS TO 335M AMERICANS
       </p>
     </div>

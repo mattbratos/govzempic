@@ -2,6 +2,7 @@
   "meta": {
     "fiscal_year": 2024,
     "total_outlays_billions": 152,
+    "national_debt_billions": 280,
     "population": 38000000,
     "ubi_share": 0.5,
     "sources": [

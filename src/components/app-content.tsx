@@ -16,16 +16,16 @@ export function AppContent() {
         <UBIBar />
       </div>
 
-      <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:max-w-none lg:px-0 lg:py-0">
-        <div className="lg:flex lg:justify-center lg:gap-0 min-h-[calc(100vh-3.5rem)]">
+      <div className="w-full">
+        <div className="lg:flex lg:gap-0 min-h-[calc(100vh-3.5rem)]">
 
           {/* Table */}
-          <div className="w-full lg:max-w-6xl lg:min-w-0 lg:flex-shrink-0">
+          <div className="w-full lg:min-w-0 lg:flex-1">
             <TableMode items={items} />
           </div>
 
           {/* Sticky UBI panel */}
-          <div className="hidden lg:block w-72 shrink-0 border-l border-border sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto">
+          <div className="hidden lg:block w-96 shrink-0 border-l border-border sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto">
             <UBIPanel />
           </div>
 

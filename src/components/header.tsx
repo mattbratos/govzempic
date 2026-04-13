@@ -23,15 +23,13 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
+      <div className="w-full px-4 h-14 flex items-center gap-6">
         <Link
           href="/"
           className="shrink-0 text-base font-black tracking-widest uppercase"
           style={{ fontFamily: "var(--font-orbitron)" }}
         >
-          <span className="text-destructive">☠ </span>
-          GOV<span className="text-destructive">ZEMPIC</span>
-          <span className="cursor text-muted-foreground" />
+          <span className="text-destructive">☠ </span>GOV<span className="text-destructive">ZEMPIC</span>
         </Link>
 
         {/* Nav links */}

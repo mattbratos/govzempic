@@ -24,15 +24,30 @@ const YEAR_OPTIONS = [5, 10, 15, 20];
 export function UBIPanel() {
   const { ubiPerMonth, ubiPerYear, ubiPerWeek, totalCutBillions, killCount, slimCount } = useCuts();
   const { currency, currentBudget, country } = useCountry();
-  const { total_outlays_billions, population } = currentBudget.meta;
+  const { total_outlays_billions, national_debt_billions, population } = currentBudget.meta;
 
   const [growthRate, setGrowthRate] = useState(country.avgGrowthRate);
   const [projectionYears, setProjectionYears] = useState(10);
+  const [familySize, setFamilySize] = useState(1);
 
   const hasAnyCuts = totalCutBillions > 0;
   const fmt = (usd: number) => formatCurrency(usd, currency);
 
+  const debtFreeYear = (() => {
+    if (totalCutBillions <= 0) return null;
+    const g = growthRate / 100;
+    let years: number;
+    if (g === 0) {
+      years = national_debt_billions / totalCutBillions;
+    } else {
+      // geometric series: S * ((1+g)^n - 1) / g = D  →  n = log(1 + D*g/S) / log(1+g)
+      years = Math.log(1 + (national_debt_billions * g) / totalCutBillions) / Math.log(1 + g);
+    }
+    return new Date().getFullYear() + Math.ceil(years);
+  })();
+
   const projectedUBI = ubiPerMonth * Math.pow(1 + growthRate / 100, projectionYears);
+  const familyMonthly = ubiPerMonth * familySize;
 
   return (
     <div className="flex flex-col h-full border-border" style={{ fontFamily: "var(--font-space-mono)" }}>
@@ -45,26 +60,66 @@ export function UBIPanel() {
 
       <div className="flex-1 flex flex-col px-5 py-6 gap-6 overflow-y-auto">
 
-        {/* ── PER MONTH ── */}
-        <div>
-          <p className="text-xs text-muted-foreground tracking-widest mb-3">PER_MONTH</p>
-          <div
-            className={`text-5xl font-black tabular-nums leading-none transition-colors duration-300 ${
-              hasAnyCuts ? "text-[oklch(0.88_0.27_145)] glow-green-lg" : "text-muted-foreground/30"
-            }`}
-            style={{ fontFamily: "var(--font-orbitron)" }}
-          >
-            {fmt(ubiPerMonth)}
+        {/* ── HERO NUMBERS ── */}
+        <div className="flex flex-col gap-4">
+          {/* Individual */}
+          <div>
+            <p className="text-xs text-muted-foreground tracking-widest mb-2">INDIVIDUAL/MO</p>
+            <div
+              className={`text-4xl font-black tabular-nums leading-none transition-colors duration-300 ${
+                hasAnyCuts ? "text-[oklch(0.88_0.27_145)] glow-green-lg" : "text-muted-foreground/30"
+              }`}
+              style={{ fontFamily: "var(--font-orbitron)" }}
+            >
+              {fmt(ubiPerMonth)}
+            </div>
           </div>
+
+          {/* Family size slider */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex justify-between items-baseline">
+              <span className="text-xs text-muted-foreground tracking-widest">HOUSEHOLD_SIZE</span>
+              <span className="text-xs font-bold tabular-nums text-muted-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
+                {familySize} {familySize === 1 ? "person" : "people"}
+              </span>
+            </div>
+            <input
+              type="range"
+              min={1}
+              max={10}
+              step={1}
+              value={familySize}
+              onChange={(e) => setFamilySize(parseInt(e.target.value))}
+              className="w-full accent-[oklch(0.88_0.27_145)] h-1 cursor-pointer"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>1</span><span>5</span><span>10</span>
+            </div>
+          </div>
+
+          {/* Household total */}
+          {familySize > 1 && (
+            <div>
+              <p className="text-xs text-muted-foreground tracking-widest mb-2">HOUSEHOLD/MO</p>
+              <div
+                className={`text-3xl font-black tabular-nums leading-none transition-colors duration-300 ${
+                  hasAnyCuts ? "text-[oklch(0.88_0.27_145)] glow-green-md" : "text-muted-foreground/30"
+                }`}
+                style={{ fontFamily: "var(--font-orbitron)" }}
+              >
+                {fmt(familyMonthly)}
+              </div>
+            </div>
+          )}
+
           <AnimatePresence>
             {hasAnyCuts && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mt-1"
               >
-                <div className="w-full h-px bg-primary/20 mt-4 mb-4" />
+                <div className="w-full h-px bg-primary/20 mb-3" />
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-baseline">
                     <span className="text-xs text-muted-foreground tracking-widest">PER_YEAR</span>
@@ -83,15 +138,15 @@ export function UBIPanel() {
         {/* ── GROWTH PROJECTION ── */}
         <div className="border border-border p-4 flex flex-col gap-4">
           <p className="text-xs text-muted-foreground tracking-widest" style={{ fontFamily: "var(--font-orbitron)" }}>
-            &gt; GROWTH_PROJECTION
+            &gt; PROJECTION
           </p>
 
-          {/* Growth rate slider */}
+          {/* GDP growth slider */}
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-baseline">
               <span className="text-xs text-muted-foreground tracking-widest">GDP_GROWTH</span>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-xs text-muted-foreground/40 tracking-widest">
+                <span className="text-xs text-muted-foreground tracking-widest">
                   avg {country.avgGrowthRate}%
                 </span>
                 <span className="text-sm font-bold tabular-nums text-foreground" style={{ fontFamily: "var(--font-orbitron)" }}>
@@ -108,7 +163,7 @@ export function UBIPanel() {
               onChange={(e) => setGrowthRate(parseFloat(e.target.value))}
               className="w-full accent-[oklch(0.88_0.27_145)] h-1 cursor-pointer"
             />
-            <div className="flex justify-between text-xs text-muted-foreground/40">
+            <div className="flex justify-between text-xs text-muted-foreground">
               <span>0%</span><span>50%</span><span>100%</span>
             </div>
           </div>
@@ -134,23 +189,38 @@ export function UBIPanel() {
             </div>
           </div>
 
-          {/* Projected value */}
-          <div className="border-t border-border pt-3">
+          {/* Projected values */}
+          <div className="border-t border-border pt-3 flex flex-col gap-2">
             <div className="flex justify-between items-baseline">
               <span className="text-xs text-muted-foreground tracking-widest">
                 {new Date().getFullYear() + projectionYears}_UBI/MO
               </span>
+              <div
+                className={`text-2xl font-black tabular-nums leading-none ${
+                  hasAnyCuts ? "text-[oklch(0.88_0.27_145)]" : "text-muted-foreground/30"
+                }`}
+                style={{ fontFamily: "var(--font-orbitron)" }}
+              >
+                {fmt(projectedUBI)}
+              </div>
             </div>
-            <div
-              className={`text-2xl font-black tabular-nums mt-1 leading-none ${
-                hasAnyCuts ? "text-[oklch(0.88_0.27_145)]" : "text-muted-foreground/30"
-              }`}
-              style={{ fontFamily: "var(--font-orbitron)" }}
-            >
-              {fmt(projectedUBI)}
-            </div>
+            {familySize > 1 && (
+              <div className="flex justify-between items-baseline">
+                <span className="text-xs text-muted-foreground tracking-widest">
+                  FAMILY_{familySize}/MO
+                </span>
+                <div
+                  className={`text-2xl font-black tabular-nums leading-none ${
+                    hasAnyCuts ? "text-[oklch(0.88_0.27_145)]" : "text-muted-foreground/30"
+                  }`}
+                  style={{ fontFamily: "var(--font-orbitron)" }}
+                >
+                  {fmt(projectedUBI * familySize)}
+                </div>
+              </div>
+            )}
             {hasAnyCuts && growthRate > 0 && (
-              <p className="text-xs text-muted-foreground/50 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 ×{Math.pow(1 + growthRate / 100, projectionYears).toFixed(2)} from today
               </p>
             )}
@@ -178,12 +248,28 @@ export function UBIPanel() {
               </span>
             </div>
           </div>
-          <div className="border-t border-border pt-3">
+          <div className="border-t border-border pt-3 flex flex-col gap-2">
             <div className="flex justify-between items-baseline">
               <span className="text-xs text-muted-foreground tracking-widest">SAVED</span>
               <span className="text-sm font-bold tabular-nums text-foreground">
-                $<AnimatedNumber value={totalCutBillions} decimals={1} />B
+                {totalCutBillions >= 1000
+                  ? <><AnimatedNumber value={totalCutBillions / 1000} decimals={2} /> T</>
+                  : <><AnimatedNumber value={totalCutBillions} decimals={1} /> B</>
+                }
               </span>
+            </div>
+            <div className="flex justify-between items-baseline">
+              <span className="text-xs text-muted-foreground tracking-widest">DEBT_FREE</span>
+              <motion.span
+                key={debtFreeYear ?? "none"}
+                initial={{ opacity: 0.4, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.18 }}
+                className={`text-sm font-bold tabular-nums ${debtFreeYear ? "text-[oklch(0.88_0.27_145)]" : "text-muted-foreground/30"}`}
+                style={{ fontFamily: "var(--font-orbitron)" }}
+              >
+                {debtFreeYear ?? "—"}
+              </motion.span>
             </div>
           </div>
         </div>
@@ -207,7 +293,7 @@ export function UBIPanel() {
         </div>
 
         {/* Context note */}
-        <div className="text-xs text-muted-foreground/50 leading-relaxed">
+        <div className="text-xs text-muted-foreground leading-relaxed">
           // 50% OF SAVINGS SPLIT<br />
           // EQUALLY ACROSS {(population / 1_000_000).toFixed(0)}M PEOPLE
         </div>
@@ -216,7 +302,7 @@ export function UBIPanel() {
 
       {/* Footer */}
       <div className="border-t border-border px-5 py-3">
-        <p className="text-xs text-muted-foreground/40 tracking-widest">
+        <p className="text-xs text-muted-foreground tracking-widest">
           FY2026 · CBO DATA
         </p>
       </div>

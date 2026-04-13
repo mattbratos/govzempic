@@ -31,5 +31,9 @@ export function getCurrency(code: string): CurrencyConfig {
 
 export function formatCurrency(usdValue: number, currency: CurrencyConfig): string {
   const converted = usdValue * currency.rateFromUSD;
-  return `${currency.symbol}${converted.toFixed(currency.decimals)}`;
+  const formatted = converted.toLocaleString("fr-FR", {
+    minimumFractionDigits: currency.decimals,
+    maximumFractionDigits: currency.decimals,
+  }).replace(/\u202f/g, " "); // normalize narrow no-break space to regular space
+  return `${currency.symbol}${formatted}`;
 }

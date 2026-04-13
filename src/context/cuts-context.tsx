@@ -15,6 +15,7 @@ interface CutsContextType {
   cuts: Map<string, CutType>;
   setCut: (id: string, type: CutType) => void;
   setCutBulk: (ids: string[], type: CutType) => void;
+  setPreset: (kills: string[], slims: string[]) => void;
   removeCut: (id: string) => void;
   resetCuts: () => void;
   getCut: (id: string) => CutType | null;
@@ -44,6 +45,15 @@ export function CutsProvider({
   }, []);
 
   const resetCuts = useCallback(() => setCuts(new Map()), []);
+
+  const setPreset = useCallback((kills: string[], slims: string[]) => {
+    setCuts(() => {
+      const next = new Map<string, CutType>();
+      kills.forEach((id) => next.set(id, "kill"));
+      slims.forEach((id) => next.set(id, "slim"));
+      return next;
+    });
+  }, []);
 
   const setCutBulk = useCallback((ids: string[], type: CutType) => {
     setCuts((prev) => {
@@ -100,6 +110,7 @@ export function CutsProvider({
         cuts,
         setCut,
         setCutBulk,
+        setPreset,
         removeCut,
         resetCuts,
         getCut,

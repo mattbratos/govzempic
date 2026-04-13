@@ -24,6 +24,7 @@ export interface BudgetItem {
 export interface BudgetMeta {
   fiscal_year: number;
   total_outlays_billions: number;
+  national_debt_billions: number;
   population: number;
   ubi_share: number;
   sources: string[];

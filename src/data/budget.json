@@ -2,6 +2,7 @@
   "meta": {
     "fiscal_year": 2026,
     "total_outlays_billions": 7400,
+    "national_debt_billions": 36000,
     "population": 335000000,
     "ubi_share": 0.5,
     "sources": [
