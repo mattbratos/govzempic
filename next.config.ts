@@ -1,4 +1,8 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -11,7 +15,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   turbopack: {
-    root: __dirname,
+    // Pin Turbopack to this repo so it doesn't walk parent directories and
+    // resolve CSS imports relative to `/Users/bratos/gh`.
+    root: projectRoot,
   },
   async headers() {
     return [

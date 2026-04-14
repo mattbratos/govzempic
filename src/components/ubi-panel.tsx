@@ -296,8 +296,11 @@ export function UBIPanel() {
 
         {/* Context note */}
         <div className="text-xs text-muted-foreground leading-relaxed">
-          // 50% OF SAVINGS SPLIT<br />
-          // EQUALLY ACROSS {(population / 1_000_000).toFixed(0)}M PEOPLE
+          {"// 50% OF SAVINGS SPLIT"}
+          <br />
+          {"// EQUALLY ACROSS "}
+          {(population / 1_000_000).toFixed(0)}
+          {"M PEOPLE"}
         </div>
 
       </div>

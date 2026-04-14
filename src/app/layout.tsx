@@ -69,7 +69,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* eslint-disable-next-line @next/next/no-before-interactive-script-component */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"

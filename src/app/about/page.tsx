@@ -38,7 +38,7 @@ export default function AboutPage() {
             className="border-t border-border pt-6 text-xs text-muted-foreground tracking-widest"
             style={{ fontFamily: "var(--font-space-mono)" }}
           >
-            // BUILT WITH NEXT.JS · DATA FROM CBO · NOT AFFILIATED WITH ANY GOVERNMENT AGENCY
+            {"// BUILT WITH NEXT.JS · DATA FROM CBO · NOT AFFILIATED WITH ANY GOVERNMENT AGENCY"}
           </div>
         </div>
       </main>

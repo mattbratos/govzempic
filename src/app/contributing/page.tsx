@@ -63,7 +63,7 @@ export default function ContributingPage() {
             className="border-t border-border pt-6 text-xs text-muted-foreground tracking-widest"
             style={{ fontFamily: "var(--font-space-mono)" }}
           >
-            // ALL CONTRIBUTIONS LICENSED UNDER MIT
+            {"// ALL CONTRIBUTIONS LICENSED UNDER MIT"}
           </div>
         </div>
       </main>

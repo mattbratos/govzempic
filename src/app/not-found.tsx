@@ -13,7 +13,7 @@ export default function NotFound() {
           404
         </p>
         <p className="text-sm text-muted-foreground tracking-widest">
-          // PAGE_NOT_FOUND
+          {"// PAGE_NOT_FOUND"}
         </p>
         <Link
           href="/"

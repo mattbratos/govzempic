@@ -284,7 +284,7 @@ export function TableMode({ items }: { items: BudgetItem[] }) {
       </div>
 
       <p className="text-xs text-muted-foreground mt-3 text-right tracking-widest">
-        // FY2026 · CBO · 50% OF SAVINGS TO 335M AMERICANS
+        {"// FY2026 · CBO · 50% OF SAVINGS TO 335M AMERICANS"}
       </p>
     </div>
   );

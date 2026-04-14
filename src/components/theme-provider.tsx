@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 type Theme = "dark" | "light";
 
@@ -10,13 +10,13 @@ const ThemeContext = createContext<{
 }>({ theme: "dark", setTheme: () => {} });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof document === "undefined") {
+      return "dark";
+    }
 
-  useEffect(() => {
-    // Read what the inline script already set
-    const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    setThemeState(current);
-  }, []);
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
+  });
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
